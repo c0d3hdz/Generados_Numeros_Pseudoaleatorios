@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Números Pseudoaleatorios</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Barra lateral de navegación -->
+        <aside class="sidebar">
+            <h2>Algoritmos</h2>
+            <ul id="algo-list">
+                <li class="active" data-target="cuadrados-medios">Cuadrados Medios</li>
+                <li data-target="productos-medios">Productos medios</li>
+                <li data-target="multiplicador-constante">Multiplicador constante</li>
+                <li data-target="lineal">Algoritmo Lineal</li>
+                <li data-target="congruencial-multiplicativo">Algoritmo Congruencial Multiplicativo</li>
+                <li data-target="">(En desarrollo)</li>
+            </ul>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="content">
+            <header>
+                <h1>Generador de Números Pseudoaleatorios</h1>
+                <p>Selecciona un algoritmo para configurar los parámetros y generar la secuencia.</p>
+            </header>
+
+            <!-- Contenedor de los formularios de entrada -->
+            <section class="forms-container">
+                <!-- Algoritmo de Cuadrados Medios -->
+                <form id="cuadrados-medios" class="algo-form active">
+                    <h3>Método de los Cuadrados Medios</h3>
+                    <div class="input-group">
+                        <label for="cm-seed">Semilla (X₀) [>3 dígitos]:</label>
+                        <input type="number" id="cm-seed" placeholder="Ej: 5735" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="cm-n">Cantidad de números a generar (n):</label>
+                        <input type="number" id="cm-n" value="10" min="1" required>
+                    </div>
+                    <button type="submit" class="btn-generate">Generar Números</button>
+                </form>
+                <!-- Algoritmo de productos medios -->
+                <form id="productos-medios" class="algo-form">
+                    <h3>Método de Productos Medios</h3>
+                    <div class="input-group">
+                        <label for="pm-seed1">Semilla 1 (X₀) [>3 dígitos]:</label>
+                        <input type="number" id="pm-seed1" placeholder="Ej: 5015" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="pm-seed2">Semilla 2 (Y₀) [>3 dígitos]:</label>
+                        <input type="number" id="pm-seed2" placeholder="Ej: 5734" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="pm-n">Cantidad de números a generar (n):</label>
+                        <input type="number" id="pm-n" value="10" min="1" required>
+                    </div>
+                    <button type="submit" class="btn-generate">Generar Números</button>
+                </form>
+                <!-- Algoritmo de multiplicador constante -->
+                <form id="multiplicador-constante" class="algo-form">
+                    <h3>Método de Multiplicador Constante</h3>
+                    <div class="input-group">
+                        <label for="mc-seed">Semilla (X₀) [>3 dígitos]:</label>
+                        <input type="number" id="mc-seed" placeholder="Ej: 9803" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="mc-a">Multiplicador (a) [>3 dígitos]:</label>
+                        <input type="number" id="mc-a" placeholder="Ej: 6965" min="2" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="mc-n">Cantidad de números a generar (n):</label>
+                        <input type="number" id="mc-n" value="10" min="1" required>
+                    </div>
+                    <button type="submit" class="btn-generate">Generar Números</button>
+                </form>
+                <!-- Algoritmo Lineal-->
+                <form id="lineal" class="algo-form">
+                    <h3>Algoritmo Linea</h3>
+                    <div class="input-group">
+                        <label for="al-seed">Semilla (X₀):</label>
+                        <input type="number" id="al-seed" placeholder="37" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="al-a">Multiplicador (a):</label>
+                        <input type="number" id="al-a" placeholder="19" required min="1">
+                    </div>
+                    <div class="input-group">
+                        <label for="al-suma">Constante (c):</label>
+                        <input type="number" id="al-suma" placeholder="33" required>
+                    </div>
+                    <!--<div class="input-group">
+                        <label for="al-m">Módulo (m) [> semilla]:</label>
+                        <input type="number" id="al-m" placeholder="100" required min="1">
+                    </div>-->
+                    <div class="input-group">
+                        <label for="al-g">Módulo (g):</label>
+                        <input type="number" id="al-g" placeholder="8" required min="1">
+                    </div>
+                    <!-- <div class="input-group">
+                        <label for="al-n">Cantidad de números a generar (n):</label>
+                        <input type="number" id="al-n" value="10" min="1" required>
+                    </div> -->
+                    <button type="submit" class="btn-generate">Generar Números</button>
+                </form>
+                <form id="congruencial-multiplicativo" class="algo-form">
+                    <h3>Algoritmo Congruencial Multiplicativo</h3>
+                    <div class="input-group">
+                        <label for="cmu-seed">Semilla (X₀):</label>
+                        <input type="number" id="cmu-seed" placeholder="17 solo números impares" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="cmu-g">potencia (g):</label>
+                        <input type="number" id="cmu-g" placeholder="5" required min="1">
+                    </div>
+                    <div class="input-group">
+                        <label for="cmu-k">Cantidad de números a generar (n):</label>
+                        <input type="number" id="cmu-k" placeholder="2" min="1" required>
+                    </div>
+                    <button type="submit" class="btn-generate">Generar Números</button>
+                </form>
+            </section>
+
+            <!-- Contenedor de Resultados -->
+            <section class="results-container">
+                <h2>Resultados</h2>
+                <div class="table-responsive">
+                    <table id="results-table">
+                        <thead>
+                            <tr>
+                                <th>Iteración (i)</th>
+                                <th>Valor (X_i)</th>
+                                <th>Número Pseudoaleatorio (r_i)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3" class="empty-state">Configura los parámetros y presiona "Generar
+                                    Números" para ver los resultados.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
