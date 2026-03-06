@@ -104,6 +104,20 @@ document.addEventListener("DOMContentLoaded", () => {
         //const n = parseInt(document.getElementById("al-n").value, 10);
         //const mValue = document.getElementById("al-m");
         const gValue = document.getElementById("al-g");
+        // c relativamente primo a m
+        let mprovicional = Math.pow(2, parseInt(gValue.value, 10));
+
+        // Verificar que sumaValue y mprovicional sean coprimos
+        if (gcd(parseInt(sumaValue.value, 10), mprovicional) !== 1) {
+          alert("La constante de suma (c) debe ser relativamente prima a m (coprima).");
+          return;
+        }
+        //c y g mayores que 0
+        if (sumaValue.value <= 0 || sumaValue.value >= mprovicional) {
+          alert(`La constante de suma (c) debe ser un número positivo menor que ${mprovicional}.`);
+          return;
+        }
+
         const results = generateLineal(seedInput, k, sumaValue, gValue);
         results.forEach((res) => {
           console.info("Renderizando la tabla");
@@ -116,11 +130,19 @@ document.addEventListener("DOMContentLoaded", () => {
           tbody.appendChild(tr);
         });
       } else if (activeAlgoId === "congruencial-multiplicativo") {
+        //recupera el valor de Xd seleccionado por el usuario
+        const xDSelect = document.getElementById("cmu-xD");
+        const xDValue = parseInt(xDSelect.value, 10);
         const seedInput = document.getElementById("cmu-seed");
-        const k = document.getElementById("cmu-k");
-        const g = document.getElementById("cmu-g");
-
-        const results = generateCongruencialMultiplicativo(seedInput, k, g);
+        const k = document.getElementById("cmu-k").value;
+        const g = document.getElementById("cmu-g").value;
+        if (seedInput.value % 2 === 0) {
+          alert(
+            "La semilla debe ser un número impar para el algoritmo congruencial multiplicativo.",
+          );
+          return;
+        }
+        const results = generateCongruencialMultiplicativo(seedInput, k, g, xDValue);
         results.forEach((res) => {
           console.info("Renderizando la tabla");
           const tr = document.createElement("tr");
@@ -129,6 +151,31 @@ document.addEventListener("DOMContentLoaded", () => {
                         <td>${res.xi}</td>
                         <td>${res.ri.toFixed(res.D)}</td>
                     `;
+          tbody.appendChild(tr);
+        });
+      } else if (activeAlgoId === "congruencial-aditivo") {
+        const secInput = document.getElementById("cma-sec").value;
+        const secArray = secInput.split(",").map((s) => parseInt(s.trim(), 10));
+
+        if (secArray.some(isNaN)) {
+          alert("La secuencia contiene valores no numéricos. Por favor ingresa solo números separados por comas.");
+          throw new Error("Secuencia no válida");
+        }
+        const m = parseInt(document.getElementById("cma-m").value, 10);
+
+        const cantidadDeNumeros = parseInt(document.getElementById("cma-n")?.value || 10, 10);
+
+        console.log("Largo de la secuencia:", secArray.length);
+
+        const results = generateCongruencialAditivo(secArray, m, cantidadDeNumeros);
+
+        results.forEach((res) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+          <td>${res.i}</td>
+          <td>${res.xi}</td>
+          <td>${res.ri.toFixed(res.D)}</td>
+        `;
           tbody.appendChild(tr);
         });
       } else {
@@ -149,6 +196,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+
+
+
+
+
+
 
   //TODO: Función para el algoritmo de Cuadrados Medios
   function generateCuadradosMedios(seedStr, n) {
@@ -174,11 +228,11 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(squared);
         console.info(
           "Inidice de inicio :" +
-            startIndex +
-            " D: " +
-            D +
-            " Longitud de squared: " +
-            squared.length,
+          startIndex +
+          " D: " +
+          D +
+          " Longitud de squared: " +
+          squared.length,
         );
         Dinsuficiente = false;
       }
@@ -196,6 +250,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     return results;
   }
+
+
+
+
+
+
+
+
   function generateProductosMedios(seedStr1, seedStr2, n) {
     let results = [];
     const D = Math.max(seedStr1.length, seedStr2.length);
@@ -231,6 +293,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     return results;
   }
+
+
+
+
+
+
+
+
+
+
   function generateMultiplicadorConstante(seedStr, a, n) {
     let results = [];
     const D = seedStr.length;
@@ -262,6 +334,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     return results;
   }
+
+
+
+
+
+
+
+
+
+
   function generateLineal(seedInput, k, sumaValue, gValue) {
     let results = [];
     let currentSeed = parseInt(seedInput.value, 10);
@@ -271,15 +353,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const D = 4; // Para mostrar al menos 4 dígitos significativos en ri
     a = 1 + 4 * parseInt(k.value, 10);
     for (let i = 1; i <= m; i++) {
-      // Mejor solución para evitar problemas de precisión en JavaScript con decimales y mostrar minimo 4 dígitos en el resultado de ri
       let nexSeed = (a * currentSeed + c) % m;
       let ri = nexSeed / (m - 1);
-      console.log(`a: ${a},${currentSeed}, c: ${c}, m: ${m}`);
-      console.log(`ri: ${ri}`);
-      //evita que ri se redondee a 0 si es un número muy pequeño, garantizando al menos 4 dígitos significativos
-      if (ri < 0.0001) {
-        ri = parseFloat(ri.toPrecision(4));
-      }
       results.push({
         i: i,
         xi: nexSeed,
@@ -290,7 +365,67 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     return results;
   }
+
+
+
+
+
+
+
   //Algoritmo congruencial multiplicativo
+  function generateCongruencialMultiplicativo(seedInput, k, g, Xd) {
+    let results = [];
+    let currentSeed = parseInt(seedInput.value, 10);
+    let kvalue = parseInt(k, 10);
+    const gvalue = parseInt(g, 10);
+    let a = Xd + 8 * kvalue;
+    const m = Math.pow(2, gvalue);
+    const N = m / 4;
+    const D = 5;
+    console.log(`a: ${a}, seed: ${currentSeed}, m: ${m}`);
+    for (let i = 1; i <= N; i++) {
+      let nextSeed = (a * currentSeed) % m;
+      let ri = nextSeed / (m - 1);
+      //mayor precision para mostrar los dígitos significativos de ri
+      ri = parseFloat(ri.toPrecision(D));
+      results.push({
+        i: i,
+        xi: nextSeed,
+        ri: ri,
+        D: D,
+      });
+      currentSeed = nextSeed;
+    }
+    return results;
+  }
+
+
+
+
+
+  function generateCongruencialAditivo(secArray, m, cantidadDeNumeros) {
+    let results = [];
+    let secuencia = [...secArray];
+    const n = secArray.length;
+    const D = 5;
+
+    for (let i = n; i < n + cantidadDeNumeros; i++) {
+      let nextValue = (secuencia[i - 1] + secuencia[i - n]) % m;
+      secuencia.push(nextValue);
+
+      let ri = nextValue / (m - 1);
+
+      results.push({
+        i: i,
+        xi: nextValue,
+        ri: ri,
+        D: D,
+      });
+    }
+
+    return results;
+  }
+
   function clearResults() {
     const tbody = document.querySelector("#results-table tbody");
     tbody.innerHTML = `

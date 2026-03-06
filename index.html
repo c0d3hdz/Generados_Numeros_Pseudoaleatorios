@@ -17,9 +17,11 @@
                 <li class="active" data-target="cuadrados-medios">Cuadrados Medios</li>
                 <li data-target="productos-medios">Productos medios</li>
                 <li data-target="multiplicador-constante">Multiplicador constante</li>
-                <li data-target="lineal">Algoritmo Lineal</li>
-                <li data-target="congruencial-multiplicativo">Algoritmo Congruencial Multiplicativo</li>
-                <li data-target="">(En desarrollo)</li>
+                <li data-target="lineal"> Lineal</li>
+                <li data-target="congruencial-multiplicativo"> Congruencial Multiplicativo</li>
+                <li data-target="congruencial-aditivo"> Congruencial Aditivo</li>
+                <li data-target="congruencial-cuadratico"> Congruencial Cuadrático</li>
+                <li data-target="bbs"> BBS ( Blum, Blum y Shub)</li>
             </ul>
         </aside>
 
@@ -119,8 +121,31 @@
                         <input type="number" id="cmu-g" placeholder="5" required min="1">
                     </div>
                     <div class="input-group">
-                        <label for="cmu-k">Cantidad de números a generar (n):</label>
+                        <label for="cmu-k">constante (k):</label>
                         <input type="number" id="cmu-k" placeholder="2" min="1" required>
+                    </div>
+                    <div class="input-gro">
+                        <label for="cmu-xD">Seleccione una opción</label>
+                        <select id="cmu-xD" required>
+                            <option value="3">3</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-generate">Generar Números</button>
+                </form>
+                <form id="congruencial-aditivo" class="algo-form">
+                    <h3>Algoritmo Congruencial Aditivo</h3>
+                    <div class="input-group">
+                        <label for="cma-sec">Secuencia de Números Pseudoaleatorios (Xi):</label>
+                        <textarea name="cma-sec" id="cma-sec" placeholder="65,89,98,03,69"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="cma-m">Módulo (m):</label>
+                        <input type="number" id="cma-m" placeholder="100" required min="1">
+                    </div>
+                    <div class="input">
+                        <label for="cma-n">Cantidad de números a generar (n):</label>
+                        <input type="number" id="cma-n" value="10" min="1" required>
                     </div>
                     <button type="submit" class="btn-generate">Generar Números</button>
                 </form>
