@@ -112,6 +112,12 @@ document.addEventListener("DOMContentLoaded", () => {
           alert("La constante de suma (c) debe ser relativamente prima a m (coprima).");
           return;
         }
+        function gcd(a, b) {
+          if (b === 0) {
+            return a;
+          }
+          return gcd(b, a % b);
+        }
         //c y g mayores que 0
         if (sumaValue.value <= 0 || sumaValue.value >= mprovicional) {
           alert(`La constante de suma (c) debe ser un número positivo menor que ${mprovicional}.`);
