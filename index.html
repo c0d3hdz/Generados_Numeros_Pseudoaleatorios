@@ -124,7 +124,7 @@
                         <label for="cmu-k">constante (k):</label>
                         <input type="number" id="cmu-k" placeholder="2" min="1" required>
                     </div>
-                    <div class="input-gro">
+                    <div class="input-group ">
                         <label for="cmu-xD">Seleccione una opción</label>
                         <select id="cmu-xD" required>
                             <option value="3">3</option>
@@ -143,14 +143,55 @@
                         <label for="cma-m">Módulo (m):</label>
                         <input type="number" id="cma-m" placeholder="100" required min="1">
                     </div>
-                    <div class="input">
+                    <div class="input-group">
                         <label for="cma-n">Cantidad de números a generar (n):</label>
                         <input type="number" id="cma-n" value="10" min="1" required>
                     </div>
                     <button type="submit" class="btn-generate">Generar Números</button>
                 </form>
-                <form id="congruencial-cuadrático">
-                   
+                <form id="congruencial-cuadratico" class="algo-form">
+                    <h3>Algoritmo Congruencial Cuadrático</h3>
+                    <div class="input-group">
+                        <label for="cc-seed">Semilla (X₀):</label>
+                        <input type="number" id="cc-seed" placeholder=" 13" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="cc-a">Coeficiente cuadrático (a):</label>
+                        <input type="number" id="cc-a" placeholder=" 26" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="cc-b">Coeficiente lineal (b):</label>
+                        <input type="number" id="cc-b" placeholder=" 27" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="cc-c">Constante (c):</label>
+                        <input type="number" id="cc-c" placeholder=" 27" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="cc-m">Módulo (m):</label>
+                        <input type="number" id="cc-m" placeholder=" 8" required min="1">
+                    </div>
+                    <button type="submit" class="btn-generate">Generar Números</button>
+                </form>
+                <form id="bbs" class="algo-form">
+                    <h3>Algoritmo BBS (Blum Blum Shub)</h3>
+                    <div class="input-group">
+                        <label for="bbs-seed">Semilla (X₀) [relativamente prima a m]:</label>
+                        <input type="number" id="bbs-seed" placeholder="Ej: 3" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="bbs-p">Primo p [congruente a 3 mod 4]:</label>
+                        <input type="number" id="bbs-p" placeholder="Ej: 11" required min="3">
+                    </div>
+                    <div class="input-group">
+                        <label for="bbs-q">Primo q [congruente a 3 mod 4]:</label>
+                        <input type="number" id="bbs-q" placeholder="Ej: 19" required min="3">
+                    </div>
+                    <div class="input-group">
+                        <label for="bbs-n">Cantidad de números a generar (n):</label>
+                        <input type="number" id="bbs-n" value="10" min="1" required>
+                    </div>
+                    <button type="submit" class="btn-generate">Generar Números</button>
                 </form>
             </section>
 
@@ -178,6 +219,7 @@
         </main>
     </div>
 
+    <script src="algorithms.js"></script>
     <script src="app.js"></script>
 </body>
 
