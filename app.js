@@ -192,6 +192,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const c = parseInt(cInput, 10);
         const m = parseInt(mInput, 10);
 
+        if (a % 2 !== 0) {
+          return alert("El valor de a debe ser par para el algoritmo congruencial cuadrático.");
+        }
+        if (c % 2 !== 1) {
+          return alert("El valor de c debe ser impar para el algoritmo congruencial cuadrático.");
+        }
+        if (((b - 1) % 4) !== a % 4) {
+          return alert("El valor de b debe cumplir (b-1) % 4 = 0 para el algoritmo congruencial cuadrático.");
+        }
+
         const results = generateCongruencialCuadratico(seed, a, b, c, m);
 
         results.forEach((res) => {
@@ -205,31 +215,26 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       } else if (activeAlgoId === "bbs") {
         const seedInput = document.getElementById("bbs-seed").value;
-        const pInput = document.getElementById("bbs-p").value;
-        const qInput = document.getElementById("bbs-q").value;
-        const nInput = document.getElementById("bbs-n").value;
+        const mInput = document.getElementById("bbs-m").value;
 
         const seed = parseInt(seedInput, 10);
-        const p = parseInt(pInput, 10);
-        const q = parseInt(qInput, 10);
-        const n = parseInt(nInput, 10);
+        const m = parseInt(mInput, 10);
 
-        if (p % 4 !== 3 || q % 4 !== 3) {
-            alert("Tanto p como q deben ser congruentes a 3 módulo 4 (ej. 7, 11, 19, etc.).");
-            return;
+        try {
+          const results = generateBBS(seed, m);
+
+          results.forEach((res) => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+            <td>${res.i}</td>
+            <td>${res.xi}</td>
+            <td>${res.ri.toFixed(res.D)}</td>
+          `;
+            tbody.appendChild(tr);
+          });
+        } catch (e) {
+          tbody.innerHTML = `<tr><td colspan="3" style="color:red;">${e.message}</td></tr>`;
         }
-
-        const results = generateBBS(seed, p, q, n);
-
-        results.forEach((res) => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-          <td>${res.i}</td>
-          <td>${res.xi}</td>
-          <td>${res.ri.toFixed(res.D)}</td>
-        `;
-          tbody.appendChild(tr);
-        });
       } else {
         const activeAlgoName = form.querySelector("h3").innerText;
         tbody.innerHTML = `

@@ -226,16 +226,17 @@ function generateCongruencialCuadratico(seed, a, b, c, m) {
 }
 
 // Algoritmo BBS (Blum Blum Shub)
-function generateBBS(seed, p, q, n) {
+function generateBBS(seed, m) {
+  if (!sonCoprimos(seed, m)) {
+    throw new Error(`Semilla ${seed} no es coprima con m=${m}. Elige una semilla diferente.`);
+  }
+
   let results = [];
   let currentSeed = seed;
-  const m = p * q;
   const D = 5;
-
-  for (let i = 1; i <= n; i++) {
+  for (let i = 1; i <= m; i++) {
     let nextSeed = Math.pow(currentSeed, 2) % m;
     let ri = nextSeed / (m - 1);
-
     results.push({
       i: i,
       xi: nextSeed,
@@ -244,6 +245,7 @@ function generateBBS(seed, p, q, n) {
     });
 
     currentSeed = nextSeed;
+    console.log(`Iteración ${i}: xi = ${nextSeed}, ri = ${ri}`);
   }
 
   return results;

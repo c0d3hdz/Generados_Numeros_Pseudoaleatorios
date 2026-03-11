@@ -12,7 +12,11 @@
     <div class="app-container">
         <!-- Barra lateral de navegación -->
         <aside class="sidebar">
-            <h2>Algoritmos</h2>
+            <h2 style="display: flex; align-items: center; gap: 10px;">
+                <img src="./assets/e0d56c36-ec59-4167-878b-47026cba40a9.webp" alt="ITSH" 
+                style="width: 3rem; height: 3rem;border-radius: 10rem;">
+                Algoritmos
+            </h2>
             <ul id="algo-list">
                 <li class="active" data-target="cuadrados-medios">Cuadrados Medios</li>
                 <li data-target="productos-medios">Productos medios</li>
@@ -36,7 +40,7 @@
             <section class="forms-container">
                 <!-- Algoritmo de Cuadrados Medios -->
                 <form id="cuadrados-medios" class="algo-form active">
-                    <h3>Método de los Cuadrados Medios</h3>
+                    <h3> Método de los Cuadrados Medios</h3>
                     <div class="input-group">
                         <label for="cm-seed">Semilla (X₀) [>3 dígitos]:</label>
                         <input type="number" id="cm-seed" placeholder=" 5735" required>
@@ -83,7 +87,7 @@
                 </form>
                 <!-- Algoritmo Lineal-->
                 <form id="lineal" class="algo-form">
-                    <h3>Algoritmo Linea</h3>
+                    <h3>Algoritmo Lineal</h3>
                     <div class="input-group">
                         <label for="al-seed">Semilla (X₀):</label>
                         <input type="number" id="al-seed" placeholder="6" required>
@@ -153,19 +157,19 @@
                     <h3>Algoritmo Congruencial Cuadrático</h3>
                     <div class="input-group">
                         <label for="cc-seed">Semilla (X₀):</label>
-                        <input type="number" id="cc-seed" placeholder=" 13" required>
+                        <input type="number" id="cc-seed" placeholder=" 13" min="1" required>
                     </div>
                     <div class="input-group">
                         <label for="cc-a">Coeficiente cuadrático (a):</label>
-                        <input type="number" id="cc-a" placeholder=" 26" required>
+                        <input type="number" id="cc-a" placeholder=" 26" min="1" required>
                     </div>
                     <div class="input-group">
                         <label for="cc-b">Coeficiente lineal (b):</label>
-                        <input type="number" id="cc-b" placeholder=" 27" required>
+                        <input type="number" id="cc-b" placeholder=" 27" min="1" required>
                     </div>
                     <div class="input-group">
                         <label for="cc-c">Constante (c):</label>
-                        <input type="number" id="cc-c" placeholder=" 27" required>
+                        <input type="number" id="cc-c" placeholder=" 27" min="1" required>
                     </div>
                     <div class="input-group">
                         <label for="cc-m">Módulo (m):</label>
@@ -175,21 +179,15 @@
                 </form>
                 <form id="bbs" class="algo-form">
                     <h3>Algoritmo BBS (Blum Blum Shub)</h3>
+                    <p>Genera números pseudoaleatorios utilizando la propiedad de la congruencia cuadrática.</p>
+                    <p>caso de uso: (a) = 1, (b) = 0, (c) = 0</p>
                     <div class="input-group">
                         <label for="bbs-seed">Semilla (X₀) [relativamente prima a m]:</label>
                         <input type="number" id="bbs-seed" placeholder=" 3" required>
                     </div>
                     <div class="input-group">
-                        <label for="bbs-p">Primo p [congruente a 3 mod 4]:</label>
-                        <input type="number" id="bbs-p" placeholder=" 11" required min="3">
-                    </div>
-                    <div class="input-group">
-                        <label for="bbs-q">Primo q [congruente a 3 mod 4]:</label>
-                        <input type="number" id="bbs-q" placeholder=" 19" required min="3">
-                    </div>
-                    <div class="input-group">
-                        <label for="bbs-n">Cantidad de números a generar (n):</label>
-                        <input type="number" id="bbs-n" value="10" min="1" required>
+                        <label for="bbs-g">modulo (m):</label>
+                        <input type="number" id="bbs-m" value="10" min="1" required>
                     </div>
                     <button type="submit" class="btn-generate">Generar Números</button>
                 </form>
