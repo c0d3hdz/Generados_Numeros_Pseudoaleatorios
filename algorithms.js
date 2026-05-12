@@ -250,3 +250,158 @@ function generateBBS(seed, m) {
 
   return results;
 }
+
+// Prueba de Kolmogorov-Smirnov para una distribución uniforme en [0,1]
+function getKSCriticalValue(n, alpha) {
+  const criticalMap = {
+    0.2: 1.07,
+    0.15: 1.14,
+    0.1: 1.22,
+    0.05: 1.36,
+    0.02: 1.52,
+    0.01: 1.63,
+  };
+
+  const k = criticalMap[alpha] || 1.36;
+  return k / Math.sqrt(n);
+}
+
+function generateKolmogorovSmirnov(sequence, alpha) {
+  const sorted = [...sequence].sort((a, b) => a - b);
+  const n = sorted.length;
+  const dPlusValues = [];
+  const dMinusValues = [];
+  const rows = [];
+
+  for (let i = 0; i < n; i++) {
+    const ri = sorted[i];
+    const fObs = (i + 1) / n;
+    const fPrev = i / n;
+    const fExp = ri;
+    const dPlus = fObs - fExp;
+    const dMinus = fExp - fPrev;
+    const diff = Math.max(dPlus, dMinus);
+
+    dPlusValues.push(dPlus);
+    dMinusValues.push(dMinus);
+    rows.push({
+      i: i + 1,
+      xi: ri,
+      fPrev: fPrev,
+      fObs: fObs,
+      dPlus: dPlus,
+      dMinus: dMinus,
+      diff: diff,
+    });
+  }
+
+  const Dplus = Math.max(...dPlusValues);
+  const Dminus = Math.max(...dMinusValues);
+  const D = Math.max(Dplus, Dminus);
+  const critical = getKSCriticalValue(n, alpha);
+  const reject = D > critical;
+
+  return {
+    rows,
+    Dplus,
+    Dminus,
+    D,
+    critical,
+    reject,
+    alpha,
+    n,
+  };
+}
+
+// Prueba de rachas: Arriba y Abajo
+function getZCriticalValue(alpha) {
+  // Approximate standard normal critical values for two-tailed tests
+  const map = {
+    0.1: 1.645,
+    0.05: 1.96,
+    0.01: 2.576
+  };
+  return map[alpha] || 1.96;
+}
+
+function generateRachasArribaAbajo(sequence, alpha) {
+  const n = sequence.length;
+  let signs = [];
+  for (let i = 1; i < n; i++) {
+    signs.push(sequence[i] >= sequence[i - 1] ? "+" : "-");
+  }
+
+  let runs = 1;
+  for (let i = 1; i < signs.length; i++) {
+    if (signs[i] !== signs[i - 1]) {
+      runs++;
+    }
+  }
+
+  const expectedRuns = (2 * n - 1) / 3;
+  const variance = (16 * n - 29) / 90;
+  const z = (runs - expectedRuns) / Math.sqrt(variance);
+  const critical = getZCriticalValue(alpha);
+  const reject = Math.abs(z) > critical;
+
+  return {
+    n,
+    signs: signs.join(" "),
+    runs,
+    expectedRuns,
+    variance,
+    z,
+    critical,
+    reject,
+    alpha
+  };
+}
+
+// Prueba de rachas: Arriba y Abajo de la Media
+function generateRachasMedia(sequence, alpha) {
+  const n = sequence.length;
+  const mean = sequence.reduce((a, b) => a + b, 0) / n;
+  
+  let signs = [];
+  let n1 = 0; // count of +
+  let n2 = 0; // count of -
+  
+  for (let i = 0; i < n; i++) {
+    if (sequence[i] >= mean) {
+      signs.push("+");
+      n1++;
+    } else {
+      signs.push("-");
+      n2++;
+    }
+  }
+
+  let runs = 1;
+  for (let i = 1; i < signs.length; i++) {
+    if (signs[i] !== signs[i - 1]) {
+      runs++;
+    }
+  }
+
+  const expectedRuns = ((2 * n1 * n2) / n) + 1;
+  const variance = (2 * n1 * n2 * (2 * n1 * n2 - n)) / (n * n * (n - 1));
+  const z = variance === 0 ? 0 : (runs - expectedRuns) / Math.sqrt(variance);
+  const critical = getZCriticalValue(alpha);
+  const reject = Math.abs(z) > critical;
+
+  return {
+    n,
+    mean,
+    n1,
+    n2,
+    signs: signs.join(" "),
+    runs,
+    expectedRuns,
+    variance,
+    z,
+    critical,
+    reject,
+    alpha
+  };
+}
+

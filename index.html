@@ -13,8 +13,8 @@
         <!-- Barra lateral de navegación -->
         <aside class="sidebar">
             <h2 style="display: flex; align-items: center; gap: 10px;">
-                <img src="./assets/e0d56c36-ec59-4167-878b-47026cba40a9.webp" alt="ITSH" 
-                style="width: 3rem; height: 3rem;border-radius: 10rem;">
+                <img src="./assets/e0d56c36-ec59-4167-878b-47026cba40a9.webp" alt="ITSH"
+                    style="width: 3rem; height: 3rem;border-radius: 10rem;">
                 Algoritmos
             </h2>
             <ul id="algo-list">
@@ -26,6 +26,11 @@
                 <li data-target="congruencial-aditivo"> Congruencial Aditivo</li>
                 <li data-target="congruencial-cuadratico"> Congruencial Cuadrático</li>
                 <li data-target="bbs"> BBS ( Blum, Blum y Shub)</li>
+                <li style="font-size: 1.2rem;">Prueba de Uniformidad</li>
+                <li data-target="Kolmogorov-Smirnov"> Kolmogorov-Smirnov</li>
+                <li style="font-size: 1.2rem; margin-top: 10px;">Pruebas de Independencia</li>
+                <li data-target="rachas-arriba-abajo">Rachas: Arriba y Abajo</li>
+                <li data-target="rachas-media">Rachas: Arriba y Abajo Media</li>
             </ul>
         </aside>
 
@@ -43,11 +48,11 @@
                     <h3> Método de los Cuadrados Medios</h3>
                     <div class="input-group">
                         <label for="cm-seed">Semilla (X₀) [>3 dígitos]:</label>
-                        <input type="number" id="cm-seed" placeholder=" 5735" required>
+                        <input type="number" id="cm-seed" placeholder=" 5735" required min="1">
                     </div>
                     <div class="input-group">
                         <label for="cm-n">Cantidad de números a generar (n):</label>
-                        <input type="number" id="cm-n" value="10" min="1" required>
+                        <input type="number" id="cm-n" value="10" min="1" required >
                     </div>
                     <button type="submit" class="btn-generate">Generar Números</button>
                 </form>
@@ -56,11 +61,11 @@
                     <h3>Método de Productos Medios</h3>
                     <div class="input-group">
                         <label for="pm-seed1">Semilla 1 (X₀) [>3 dígitos]:</label>
-                        <input type="number" id="pm-seed1" placeholder=" 5015" required>
+                        <input type="number" id="pm-seed1" placeholder=" 5015" required min="1">
                     </div>
                     <div class="input-group">
                         <label for="pm-seed2">Semilla 2 (Y₀) [>3 dígitos]:</label>
-                        <input type="number" id="pm-seed2" placeholder=" 5734" required>
+                        <input type="number" id="pm-seed2" placeholder=" 5734" required min="1">
                     </div>
                     <div class="input-group">
                         <label for="pm-n">Cantidad de números a generar (n):</label>
@@ -73,7 +78,7 @@
                     <h3>Método de Multiplicador Constante</h3>
                     <div class="input-group">
                         <label for="mc-seed">Semilla (X₀) [>3 dígitos]:</label>
-                        <input type="number" id="mc-seed" placeholder=" 9803" required>
+                        <input type="number" id="mc-seed" placeholder=" 9803" required min="1">
                     </div>
                     <div class="input-group">
                         <label for="mc-a">Multiplicador (a) [>3 dígitos]:</label>
@@ -90,7 +95,7 @@
                     <h3>Algoritmo Lineal</h3>
                     <div class="input-group">
                         <label for="al-seed">Semilla (X₀):</label>
-                        <input type="number" id="al-seed" placeholder="6" required>
+                        <input type="number" id="al-seed" placeholder="6" min="1" required>
                     </div>
                     <div class="input-group">
                         <label for="al-a">Multiplicador (a):</label>
@@ -190,6 +195,54 @@
                         <input type="number" id="bbs-m" value="10" min="1" required>
                     </div>
                     <button type="submit" class="btn-generate">Generar Números</button>
+                </form>
+                <form id="Kolmogorov-Smirnov" class="algo-form">
+                    <h3>Prueba de Uniformidad Kolmogorov-Smirnov</h3>
+                    <div class="input-group">
+                        <label for="ks-sequence">Secuencia de valores r<sub>i</sub> en [0,1]:</label>
+                        <textarea id="ks-sequence" placeholder="0.23, 0.45, 0.76, 0.12" required></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="ks-alpha">Nivel de significancia (α):</label>
+                        <select id="ks-alpha" required>
+                            <option value="0.1">0.10</option>
+                            <option value="0.05" selected>0.05</option>
+                            <option value="0.01">0.01</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-generate">Evaluar Uniformidad</button>
+                </form>
+                <form id="rachas-arriba-abajo" class="algo-form">
+                    <h3>Prueba de Rachas: Arriba y Abajo</h3>
+                    <div class="input-group">
+                        <label for="raa-sequence">Secuencia de valores r<sub>i</sub>:</label>
+                        <textarea id="raa-sequence" placeholder="0.45, 0.23, 0.76, 0.12" required></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="raa-alpha">Nivel de significancia (α):</label>
+                        <select id="raa-alpha" required>
+                            <option value="0.1">0.10</option>
+                            <option value="0.05" selected>0.05</option>
+                            <option value="0.01">0.01</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-generate">Evaluar Independencia</button>
+                </form>
+                <form id="rachas-media" class="algo-form">
+                    <h3>Prueba de Rachas: Arriba y Abajo de la Media</h3>
+                    <div class="input-group">
+                        <label for="rm-sequence">Secuencia de valores r<sub>i</sub>:</label>
+                        <textarea id="rm-sequence" placeholder="0.45, 0.23, 0.76, 0.12" required></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="rm-alpha">Nivel de significancia (α):</label>
+                        <select id="rm-alpha" required>
+                            <option value="0.1">0.10</option>
+                            <option value="0.05" selected>0.05</option>
+                            <option value="0.01">0.01</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-generate">Evaluar Independencia</button>
                 </form>
             </section>
 
