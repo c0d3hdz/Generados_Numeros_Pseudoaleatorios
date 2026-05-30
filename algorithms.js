@@ -405,3 +405,92 @@ function generateRachasMedia(sequence, alpha) {
   };
 }
 
+// Prueba de Poker
+function getChiSquareCriticalValue6df(alpha) {
+  const map = {
+    0.1: 10.645,
+    0.05: 12.592,
+    0.01: 16.812
+  };
+  return map[alpha] || 12.592;
+}
+
+function generatePoker(sequence, alpha) {
+  const n = sequence.length;
+
+  let counts = {
+    TD: 0,
+    "1P": 0,
+    "2P": 0,
+    T: 0,
+    TP: 0,
+    P: 0,
+    Q: 0
+  };
+
+  const probabilities = {
+    TD: 0.3024,
+    "1P": 0.5040,
+    "2P": 0.1080,
+    T: 0.0720,
+    TP: 0.0090,
+    P: 0.0045,
+    Q: 0.0001
+  };
+
+  sequence.forEach(num => {
+    let str = num.toString();
+    let frac = str.includes('.') ? str.split('.')[1] : "0";
+    while (frac.length < 5) frac += "0";
+    if (frac.length > 5) frac = frac.substring(0, 5);
+
+    let digitCounts = {};
+    for (let char of frac) {
+      digitCounts[char] = (digitCounts[char] || 0) + 1;
+    }
+
+    let frequencies = Object.values(digitCounts).sort((a, b) => b - a);
+
+    if (frequencies[0] === 5) counts.Q++;
+    else if (frequencies[0] === 4) counts.P++;
+    else if (frequencies[0] === 3 && frequencies[1] === 2) counts.TP++;
+    else if (frequencies[0] === 3 && frequencies[1] === 1) counts.T++;
+    else if (frequencies[0] === 2 && frequencies[1] === 2) counts["2P"]++;
+    else if (frequencies[0] === 2 && frequencies[1] === 1) counts["1P"]++;
+    else counts.TD++;
+  });
+
+  let chiSquareCalc = 0;
+  let tableDetails = [];
+
+  for (let cat in probabilities) {
+    let Oi = counts[cat];
+    let Ei = n * probabilities[cat];
+    let diffSq = Math.pow(Oi - Ei, 2);
+    let stat = Ei === 0 ? 0 : diffSq / Ei;
+    chiSquareCalc += stat;
+
+    tableDetails.push({
+      category: cat,
+      probability: probabilities[cat],
+      Oi: Oi,
+      Ei: Ei,
+      stat: stat
+    });
+  }
+
+  const df = 6;
+  const critical = getChiSquareCriticalValue6df(alpha);
+  const reject = chiSquareCalc > critical;
+
+  return {
+    n,
+    tableDetails,
+    chiSquareCalc,
+    critical,
+    reject,
+    df,
+    alpha
+  };
+}
+

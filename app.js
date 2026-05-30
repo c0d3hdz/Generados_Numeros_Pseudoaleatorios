@@ -360,6 +360,54 @@ document.addEventListener("DOMContentLoaded", () => {
             <strong>Decisión ( |Z| > Z_crit ):</strong> ${result.reject ? "Rechaza H0 (no son independientes)" : "No rechaza H0 (son independientes)"}
           </td></tr>
         `;
+      } else if (activeAlgoId === "poker") {
+        const sequenceValue = document.getElementById("poker-sequence").value;
+        const alphaValue = parseFloat(document.getElementById("poker-alpha").value);
+
+        const sequence = sequenceValue
+          .split(/[\s,]+/)
+          .filter(Boolean)
+          .map((value) => parseFloat(value.trim()));
+
+        if (sequence.length < 5) {
+          alert("Ingresa al menos 5 valores para evaluar la prueba de Poker.");
+          return;
+        }
+
+        const result = generatePoker(sequence, alphaValue);
+        const thead = document.querySelector("#results-table thead");
+        thead.innerHTML = `
+            <tr>
+                <th>Categoría</th>
+                <th>O_i (Observado)</th>
+                <th>E_i (Esperado)</th>
+                <th>p_i</th>
+                <th>(O_i - E_i)² / E_i</th>
+            </tr>
+        `;
+        
+        result.tableDetails.forEach((res) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${res.category}</td>
+            <td>${res.Oi}</td>
+            <td>${res.Ei.toFixed(4)}</td>
+            <td>${res.probability.toFixed(4)}</td>
+            <td>${res.stat.toFixed(4)}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        const conclusionRow = document.createElement("tr");
+        conclusionRow.innerHTML = `
+          <td colspan="5" style="text-align:left; padding: 16px; background:#f8fafc;">
+            <strong>n:</strong> ${result.n} &nbsp;|&nbsp;
+            <strong>χ² Calculado:</strong> ${result.chiSquareCalc.toFixed(4)} &nbsp;|&nbsp;
+            <strong>χ² Crítico (α=${result.alpha}, df=${result.df}):</strong> ${result.critical.toFixed(4)}<br>
+            <strong>Decisión (χ² > χ²_crit):</strong> ${result.reject ? "Rechaza H0 (no son independientes)" : "No rechaza H0 (son independientes)"}
+          </td>
+        `;
+        tbody.appendChild(conclusionRow);
       } else {
         const activeAlgoName = form.querySelector("h3").innerText;
         tbody.innerHTML = `

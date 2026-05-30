@@ -31,6 +31,7 @@
                 <li style="font-size: 1.2rem; margin-top: 10px;">Pruebas de Independencia</li>
                 <li data-target="rachas-arriba-abajo">Rachas: Arriba y Abajo</li>
                 <li data-target="rachas-media">Rachas: Arriba y Abajo Media</li>
+                <li data-target="poker"> Prueba de Poker</li>
             </ul>
         </aside>
 
@@ -243,6 +244,22 @@
                         </select>
                     </div>
                     <button type="submit" class="btn-generate">Evaluar Independencia</button>
+                </form>
+                <form id="poker" class="algo-form">
+                    <h3>Prueba de Poker (5 decimales)</h3>
+                    <div class="input-group">
+                        <label for="poker-sequence">Secuencia de valores r<sub>i</sub>:</label>
+                        <textarea id="poker-sequence" placeholder="0.23456, 0.45678, 0.76543, 0.12121" required></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="poker-alpha">Nivel de significancia (α):</label>
+                        <select id="poker-alpha" required>
+                            <option value="0.10">0.10</option>
+                            <option value="0.05" selected>0.05</option>
+                            <option value="0.01">0.01</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-generate">Evaluar Poker</button>
                 </form>
             </section>
 
