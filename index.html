@@ -27,6 +27,8 @@
                 <li data-target="congruencial-cuadratico"> Congruencial Cuadrático</li>
                 <li data-target="bbs"> BBS ( Blum, Blum y Shub)</li>
                 <li style="font-size: 1.2rem;">Prueba de Uniformidad</li>
+                <li data-target="t-student"> T de Student</li>
+                <li data-target="chi-cuadrada"> chi cuadrada</li>
                 <li data-target="Kolmogorov-Smirnov"> Kolmogorov-Smirnov</li>
                 <li style="font-size: 1.2rem; margin-top: 10px;">Pruebas de Independencia</li>
                 <li data-target="rachas-arriba-abajo">Rachas: Arriba y Abajo</li>
@@ -53,7 +55,7 @@
                     </div>
                     <div class="input-group">
                         <label for="cm-n">Cantidad de números a generar (n):</label>
-                        <input type="number" id="cm-n" value="10" min="1" required >
+                        <input type="number" id="cm-n" value="10" min="1" required>
                     </div>
                     <button type="submit" class="btn-generate">Generar Números</button>
                 </form>
@@ -249,7 +251,8 @@
                     <h3>Prueba de Poker (5 decimales)</h3>
                     <div class="input-group">
                         <label for="poker-sequence">Secuencia de valores r<sub>i</sub>:</label>
-                        <textarea id="poker-sequence" placeholder="0.23456, 0.45678, 0.76543, 0.12121" required></textarea>
+                        <textarea id="poker-sequence" placeholder="0.23456, 0.45678, 0.76543, 0.12121"
+                            required></textarea>
                     </div>
                     <div class="input-group">
                         <label for="poker-alpha">Nivel de significancia (α):</label>
@@ -260,6 +263,44 @@
                         </select>
                     </div>
                     <button type="submit" class="btn-generate">Evaluar Poker</button>
+                </form>
+
+                <form id="t-student" class="algo-form">
+                    <h3>Prueba de las Medias (T de Student)</h3>
+                    <div class="input-group">
+                        <label for="ts-sequence">Secuencia de valores r<sub>i</sub>:</label>
+                        <textarea id="ts-sequence" placeholder="0.23, 0.45, 0.76, 0.12" required></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="ts-alpha">Nivel de significancia (α):</label>
+                        <select id="ts-alpha" required>
+                            <option value="0.10">0.10</option>
+                            <option value="0.05" selected>0.05</option>
+                            <option value="0.01">0.01</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-generate">Evaluar Prueba de Medias</button>
+                </form>
+
+                <form id="chi-cuadrada" class="algo-form">
+                    <h3>Prueba de Uniformidad (Chi Cuadrada)</h3>
+                    <div class="input-group">
+                        <label for="chi-sequence">Secuencia de valores r<sub>i</sub>:</label>
+                        <textarea id="chi-sequence" placeholder="0.23, 0.45, 0.76, 0.12" required></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="chi-k">Número de subintervalos (m) [Opcional]:</label>
+                        <input type="number" id="chi-k" placeholder="Raíz cuadrada de n por defecto" min="2">
+                    </div>
+                    <div class="input-group">
+                        <label for="chi-alpha">Nivel de significancia (α):</label>
+                        <select id="chi-alpha" required>
+                            <option value="0.10">0.10</option>
+                            <option value="0.05" selected>0.05</option>
+                            <option value="0.01">0.01</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-generate">Evaluar Uniformidad</button>
                 </form>
             </section>
 

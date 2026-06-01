@@ -408,6 +408,87 @@ document.addEventListener("DOMContentLoaded", () => {
           </td>
         `;
         tbody.appendChild(conclusionRow);
+      } else if (activeAlgoId === "t-student") {
+        const sequenceValue = document.getElementById("ts-sequence").value;
+        const alphaValue = document.getElementById("ts-alpha").value;
+
+        const sequence = sequenceValue
+          .split(/[\s,]+/)
+          .filter(Boolean)
+          .map((value) => parseFloat(value.trim()));
+
+        if (sequence.length < 2) {
+          alert("Ingresa al menos 2 valores para la prueba de Medias.");
+          return;
+        }
+
+        const result = generateTStudent(sequence, alphaValue);
+        const thead = document.querySelector("#results-table thead");
+        thead.innerHTML = `
+            <tr>
+                <th colspan="3">Resultados de la Prueba de Medias (T de Student)</th>
+            </tr>
+        `;
+        
+        tbody.innerHTML = `
+          <tr><td colspan="3" style="text-align:left; padding: 16px; background:#f8fafc;">
+            <strong>n:</strong> ${result.n}<br>
+            <strong>Media calculada (x̄):</strong> ${result.mean.toFixed(5)}<br>
+            <strong>Desviación estándar (S):</strong> ${result.s.toFixed(5)}<br>
+            <strong>Estadístico (t_0):</strong> ${result.tCalculated.toFixed(5)}<br>
+            <strong>Valor crítico (α=${result.alpha}, dos colas):</strong> ${result.critical.toFixed(5)}<br>
+            <strong>Decisión (|t_0| > t_crit):</strong> ${result.reject ? "Rechaza H0 (la media poblacional no es 0.5)" : "No rechaza H0 (la media poblacional es estadísticamente 0.5)"}
+          </td></tr>
+        `;
+      } else if(activeAlgoId === "chi-cuadrada") {
+        const sequenceValue = document.getElementById("chi-sequence").value;
+        const kValueStr = document.getElementById("chi-k").value.trim();
+        const alphaValue = document.getElementById("chi-alpha").value;
+
+        const sequence = sequenceValue
+          .split(/[\s,]+/)
+          .filter(Boolean)
+          .map((value) => parseFloat(value.trim()));
+
+        if (sequence.length < 2) {
+          alert("Ingresa al menos 2 valores para la prueba Chi Cuadrada.");
+          return;
+        }
+
+        const mIntervals = kValueStr !== "" ? parseInt(kValueStr, 10) : 0;
+        const result = generateChiCuadrada(sequence, mIntervals, alphaValue);
+
+        const thead = document.querySelector("#results-table thead");
+        thead.innerHTML = `
+            <tr>
+                <th>Intervalo</th>
+                <th>Frecuencia Observada (O_i)</th>
+                <th>Frecuencia Esperada (E_i)</th>
+                <th>(O_i - E_i)² / E_i</th>
+            </tr>
+        `;
+        
+        result.tableDetails.forEach((res) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${res.interval}</td>
+            <td>${res.Oi}</td>
+            <td>${res.Ei.toFixed(4)}</td>
+            <td>${res.stat.toFixed(4)}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        const conclusionRow = document.createElement("tr");
+        conclusionRow.innerHTML = `
+          <td colspan="4" style="text-align:left; padding: 16px; background:#f8fafc;">
+            <strong>Estadístico χ²_0:</strong> ${result.chiCalc.toFixed(4)}<br>
+            <strong>Grados de libertad (V):</strong> ${result.df}<br>
+            <strong>χ² crítico (α=${result.alpha}):</strong> ${result.critical.toFixed(4)}<br>
+            <strong>Decisión (χ²_0 > χ²_crit):</strong> ${result.reject ? "Rechaza H0 (No sigue una distribución uniforme)" : "No rechaza H0 (Sigue una distribución uniforme)"}
+          </td>
+        `;
+        tbody.appendChild(conclusionRow);
       } else {
         const activeAlgoName = form.querySelector("h3").innerText;
         tbody.innerHTML = `

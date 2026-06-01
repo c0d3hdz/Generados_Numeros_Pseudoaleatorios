@@ -361,11 +361,11 @@ function generateRachasArribaAbajo(sequence, alpha) {
 function generateRachasMedia(sequence, alpha) {
   const n = sequence.length;
   const mean = sequence.reduce((a, b) => a + b, 0) / n;
-  
+
   let signs = [];
   let n1 = 0; // count of +
   let n2 = 0; // count of -
-  
+
   for (let i = 0; i < n; i++) {
     if (sequence[i] >= mean) {
       signs.push("+");
@@ -491,6 +491,119 @@ function generatePoker(sequence, alpha) {
     reject,
     df,
     alpha
+  };
+}
+
+// Prueba de las Medias (T de Student / Estadístico Z para n >= 2)
+function generateTStudent(sequence, alphaStr) {
+  const alpha = parseFloat(alphaStr);
+  const n = sequence.length;
+  const mean = sequence.reduce((sum, val) => sum + val, 0) / n;
+  
+  // Varianza muestral
+  const variance = sequence.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / (n - 1);
+  const s = Math.sqrt(variance);
+
+  // Estadístico: t = |Media - 0.5| / (s / raiz(n))
+  const t0 = Math.abs(mean - 0.5) / (s / Math.sqrt(n));
+
+  // Valores críticos Z para prueba de dos colas
+  const mapZ = {
+    0.10: 1.645,
+    0.05: 1.960,
+    0.01: 2.576
+  };
+  
+  const critical = mapZ[alpha] || 1.960;
+  const reject = t0 > critical;
+
+  return {
+    n,
+    mean,
+    variance,
+    s,
+    tCalculated: t0,
+    critical,
+    reject,
+    alpha: alphaStr
+  };
+}
+
+// Valores Críticos Chi Cuadrada (Aproximación de Wilson-Hilferty para no mapeados)
+function getChiSquareCriticalValueApprox(df, alphaStr) {
+  const alpha = parseFloat(alphaStr);
+  const chiSqMap = {
+    1: { 0.1: 2.706, 0.05: 3.841, 0.01: 6.635 },
+    2: { 0.1: 4.605, 0.05: 5.991, 0.01: 9.210 },
+    3: { 0.1: 6.251, 0.05: 7.815, 0.01: 11.345 },
+    4: { 0.1: 7.779, 0.05: 9.488, 0.01: 13.277 },
+    5: { 0.1: 9.236, 0.05: 11.070, 0.01: 15.086 },
+    6: { 0.1: 10.645, 0.05: 12.592, 0.01: 16.812 },
+    7: { 0.1: 12.017, 0.05: 14.067, 0.01: 18.475 },
+    8: { 0.1: 13.362, 0.05: 15.507, 0.01: 20.090 },
+    9: { 0.1: 14.684, 0.05: 16.919, 0.01: 21.666 },
+    10:{ 0.1: 15.987, 0.05: 18.307, 0.01: 23.209 },
+    11:{ 0.1: 17.275, 0.05: 19.675, 0.01: 24.725 },
+    12:{ 0.1: 18.549, 0.05: 21.026, 0.01: 26.217 },
+    13:{ 0.1: 19.812, 0.05: 22.362, 0.01: 27.688 },
+    14:{ 0.1: 21.064, 0.05: 23.685, 0.01: 29.141 },
+    15:{ 0.1: 22.307, 0.05: 24.996, 0.01: 30.578 },
+    20:{ 0.1: 28.412, 0.05: 31.410, 0.01: 37.566 },
+    30:{ 0.1: 40.256, 0.05: 43.773, 0.01: 50.892 }
+  };
+
+  if (chiSqMap[df] && chiSqMap[df][alpha]) {
+    return chiSqMap[df][alpha];
+  }
+  
+  const zMap = { 0.1: 1.282, 0.05: 1.645, 0.01: 2.326 };
+  const z = zMap[alpha] || 1.645;
+  const p1 = 2 / (9 * df);
+  return df * Math.pow((1 - p1 + z * Math.sqrt(p1)), 3);
+}
+
+// Prueba de Uniformidad Chi Cuadrada
+function generateChiCuadrada(sequence, mIntervals, alphaStr) {
+  const n = sequence.length;
+  let m = mIntervals && mIntervals >= 2 ? mIntervals : Math.floor(Math.sqrt(n));
+  if (m < 2) m = 2; // mínimo de intervalos
+
+  const expected = n / m;
+  let counts = new Array(m).fill(0);
+  
+  sequence.forEach(val => {
+    let index = Math.floor(val * m);
+    if (index >= m) index = m - 1; 
+    counts[index]++;
+  });
+
+  let chiCalc = 0;
+  let tableDetails = [];
+
+  for (let i=0; i<m; i++) {
+    let observed = counts[i];
+    let diffVar = Math.pow(observed - expected, 2) / expected;
+    chiCalc += diffVar;
+
+    tableDetails.push({
+      interval: `[${(i/m).toFixed(3)}, ${((i+1)/m).toFixed(3)})`,
+      Oi: observed,
+      Ei: expected,
+      stat: diffVar
+    });
+  }
+
+  const df = m - 1;
+  const critical = getChiSquareCriticalValueApprox(df, alphaStr);
+  const reject = chiCalc > critical;
+
+  return {
+    tableDetails,
+    chiCalc,
+    df,
+    critical,
+    reject,
+    alpha: alphaStr
   };
 }
 
