@@ -440,6 +440,38 @@ document.addEventListener("DOMContentLoaded", () => {
             <strong>Decisión (|t_0| > t_crit):</strong> ${result.reject ? "Rechaza H0 (la media poblacional no es 0.5)" : "No rechaza H0 (la media poblacional es estadísticamente 0.5)"}
           </td></tr>
         `;
+      } else if (activeAlgoId === "Prueba-de-Varianza") {
+        const sequenceValue = document.getElementById("pv-sequence").value;
+        const alphaValue = document.getElementById("pv-alpha").value;
+
+        const sequence = sequenceValue
+          .split(/[\s,]+/)
+          .filter(Boolean)
+          .map((value) => parseFloat(value.trim()));
+
+        if (sequence.length < 2) {
+          alert("Ingresa al menos 2 valores para la prueba de Varianza.");
+          return;
+        }
+
+        const result = generateVarianza(sequence, alphaValue);
+        const thead = document.querySelector("#results-table thead");
+        thead.innerHTML = `
+            <tr>
+                <th colspan="3">Resultados de la Prueba de Varianza</th>
+            </tr>
+        `;
+        
+        tbody.innerHTML = `
+          <tr><td colspan="3" style="text-align:left; padding: 16px; background:#f8fafc;">
+            <strong>n:</strong> ${result.n}<br>
+            <strong>Media calculada:</strong> ${result.mean.toFixed(5)}<br>
+            <strong>Varianza muestral (V):</strong> ${result.variance.toFixed(5)}<br>
+            <strong>Límite inferior (LI):</strong> ${result.li.toFixed(5)}<br>
+            <strong>Límite superior (LS):</strong> ${result.ls.toFixed(5)}<br>
+            <strong>Decisión (V ∉ [LI, LS]):</strong> ${result.reject ? "Rechaza H0 (la varianza poblacional no es 1/12)" : "No rechaza H0 (la varianza poblacional es estadísticamente 1/12)"}
+          </td></tr>
+        `;
       } else if(activeAlgoId === "chi-cuadrada") {
         const sequenceValue = document.getElementById("chi-sequence").value;
         const kValueStr = document.getElementById("chi-k").value.trim();

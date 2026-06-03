@@ -27,6 +27,7 @@
                 <li data-target="congruencial-cuadratico"> Congruencial Cuadrático</li>
                 <li data-target="bbs"> BBS ( Blum, Blum y Shub)</li>
                 <li style="font-size: 1.2rem;">Prueba de Uniformidad</li>
+                <li data-target="Prueba-de-Varianza"> Prueba de Varianza</li>
                 <li data-target="t-student"> T de Student</li>
                 <li data-target="chi-cuadrada"> chi cuadrada</li>
                 <li data-target="Kolmogorov-Smirnov"> Kolmogorov-Smirnov</li>
@@ -280,6 +281,23 @@
                         </select>
                     </div>
                     <button type="submit" class="btn-generate">Evaluar Prueba de Medias</button>
+                </form>
+
+                <form id="Prueba-de-Varianza" class="algo-form">
+                    <h3>Prueba de Varianza</h3>
+                    <div class="input-group">
+                        <label for="pv-sequence">Secuencia de valores r<sub>i</sub>:</label>
+                        <textarea id="pv-sequence" placeholder="0.23, 0.45, 0.76, 0.12" required></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="pv-alpha">Nivel de significancia (α):</label>
+                        <select id="pv-alpha" required>
+                            <option value="0.10">0.10</option>
+                            <option value="0.05" selected>0.05</option>
+                            <option value="0.01">0.01</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-generate">Evaluar Prueba de Varianza</button>
                 </form>
 
                 <form id="chi-cuadrada" class="algo-form">
